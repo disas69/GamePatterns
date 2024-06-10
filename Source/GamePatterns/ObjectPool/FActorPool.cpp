@@ -106,9 +106,6 @@ void FActorPool::PrepareActor(AActor* Actor)
             PrimComp->SetSimulatePhysics(true);
         }
     }
-
-    Actor->SetActorLocation(FVector::ZeroVector);
-    Actor->SetActorRotation(FRotator::ZeroRotator);
 }
 
 void FActorPool::ResetActor(AActor* Actor)
