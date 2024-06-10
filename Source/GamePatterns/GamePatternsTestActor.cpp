@@ -1,6 +1,7 @@
 ﻿// Game Programming Patterns, Eugene Esaulenko, 2024
 
 #include "GamePatternsTestActor.h"
+#include "Command/ActionCommand.h"
 
 AGamePatternsTestActor::AGamePatternsTestActor()
 {
@@ -11,14 +12,9 @@ void AGamePatternsTestActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    // Initialize actor pool
-    ActorPool.Initialize(GetWorld());
+    // StartObjectPoolTest();
 
-    // Start spawning actors
-    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AGamePatternsTestActor::SpawnPooledActor, SpawnInterval, true);
-
-    // Start returning actors
-    GetWorld()->GetTimerManager().SetTimer(ReturnTimerHandle, this, &AGamePatternsTestActor::ReturnActorToPool, ReturnInterval, true);
+    StartCommandStackTest();
 }
 
 void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -36,6 +32,18 @@ void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
     }
 
     ActorPool.Clear();
+}
+
+void AGamePatternsTestActor::StartObjectPoolTest()
+{
+    // Initialize actor pool
+    ActorPool.Initialize(GetWorld());
+
+    // Start spawning actors
+    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AGamePatternsTestActor::SpawnPooledActor, SpawnInterval, true);
+
+    // Start returning actors
+    GetWorld()->GetTimerManager().SetTimer(ReturnTimerHandle, this, &AGamePatternsTestActor::ReturnActorToPool, ReturnInterval, true);
 }
 
 void AGamePatternsTestActor::SpawnPooledActor()
@@ -59,6 +67,46 @@ void AGamePatternsTestActor::ReturnActorToPool()
 
     ActorPool.ReturnActor(ActiveActors[0]);
     ActiveActors.RemoveAt(0);
+}
+
+void AGamePatternsTestActor::StartCommandStackTest()
+{
+    UActionCommand* MoveCommand = NewObject<UActionCommand>(this);
+    MoveCommand->Initialize([this]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Execute"));
+    },
+    [this]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Undo"));
+    });
+    Commands.Add(MoveCommand);
+
+    UActionCommand* JumpCommand = NewObject<UActionCommand>(this);
+    JumpCommand->Initialize([this]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Execute"));
+    },
+    [this]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Undo"));
+    });
+    Commands.Add(JumpCommand);
+
+    CommandStack.AddCommand(MoveCommand);
+    CommandStack.AddCommand(JumpCommand);
+    CommandStack.ProcessCommands();
+
+    CommandStack.UndoLastCommand();
+    
+    CommandStack.AddCommand(MoveCommand);
+    CommandStack.AddCommand(MoveCommand);
+    CommandStack.ProcessCommands();
+
+    while (CommandStack.GetExecutedCommandsNum() > 0)
+    {
+        CommandStack.UndoLastCommand();
+    }
 }
 
 void AGamePatternsTestActor::Tick(float DeltaTime)
