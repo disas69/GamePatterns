@@ -24,16 +24,7 @@ struct TFStateMachine
 
     void AddTransition(T From, T To, TFunction<void()> Transition)
     {
-        for (const auto& Pair : Transitions)
-        {
-            if (Pair.Key.Key == From && Pair.Key.Value == To)
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Transition from %s to %s already exists"), *UEnum::GetValueAsString(From), *UEnum::GetValueAsString(To));
-                return;
-            }
-        }
-        
-        Transitions.Add(TPair<T, T>(From, To), Transition);
+        Transitions.FindOrAdd(From).Add(To, Transition);
     }
 
     void SetState(T NewState)
@@ -43,16 +34,15 @@ struct TFStateMachine
             return;
         }
 
-        for (const auto& Pair : Transitions)
+        auto MapFrom = Transitions.Find(CurrentState);
+        if (MapFrom != nullptr)
         {
-            if (Pair.Key.Key == CurrentState && Pair.Key.Value == NewState)
+            auto Transition = MapFrom->Find(NewState);
+            if (Transition != nullptr)
             {
-                if (Pair.Value != nullptr)
-                {
-                    CurrentState = NewState;
-                    Pair.Value();
-                    return;
-                }
+                CurrentState = NewState;
+                (*Transition)();
+                return;
             }
         }
 
@@ -61,5 +51,5 @@ struct TFStateMachine
 
 private:
     T CurrentState;
-    TMap<TPair<T, T>, TFunction<void()>> Transitions;
+    TMap<T, TMap<T, TFunction<void()>>> Transitions;
 };

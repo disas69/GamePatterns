@@ -14,7 +14,7 @@ void AGamePatternsTestActor::BeginPlay()
 
     // StartObjectPoolTest();
 
-    StartCommandStackTest();
+    // StartCommandStackTest();
 }
 
 void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
