@@ -2,11 +2,13 @@
 
 #include "GamePatternsTestActor.h"
 #include "Command/ActionCommand.h"
+#include "ServiceLocator/AudioService.h"
+#include "ServiceLocator/ServiceLocatorSubsystem.h"
 #include "Singleton/GameStateSubsystem.h"
 
 AGamePatternsTestActor::AGamePatternsTestActor()
 {
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 }
 
 void AGamePatternsTestActor::BeginPlay()
@@ -17,7 +19,9 @@ void AGamePatternsTestActor::BeginPlay()
 
     // StartCommandStackTest();
 
-    StartSingletonTest();
+    // StartSingletonTest();
+
+    StartServiceLocatorTest();
 }
 
 void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -102,13 +106,31 @@ void AGamePatternsTestActor::StartSingletonTest()
 {
     // UGameStateSubsystem is a singleton based on UGameInstanceSubsystem
     UGameStateSubsystem::GetInstance()->SetState(EGameState::MainMenu);
-    
+
     UGameStateSubsystem::GetInstance()->SetState(EGameState::InGame);
-    
+
     UGameStateSubsystem::GetInstance()->SetState(EGameState::GameOver);
 }
 
-void AGamePatternsTestActor::Tick(float DeltaTime)
+void AGamePatternsTestActor::StartServiceLocatorTest()
 {
-    Super::Tick(DeltaTime);
+    // Try to resolve audio service instance that is not registered yet
+    const UAudioService* AudioService = UServiceLocatorSubsystem::ResolveService<UAudioService>();
+    if (AudioService != nullptr)
+    {
+        AudioService->PlayAudio(nullptr);
+    }
+    
+    // Register new audio service instance
+    UServiceLocatorSubsystem::RegisterService<UAudioService>(NewObject<UAudioService>());
+
+    // Resolve audio service instance and play audio
+    AudioService = UServiceLocatorSubsystem::ResolveService<UAudioService>();
+    if (AudioService != nullptr)
+    {
+        AudioService->PlayAudio(nullptr);
+    }
+
+    // Unregister audio service instance
+    UServiceLocatorSubsystem::UnregisterService<UAudioService>();
 }

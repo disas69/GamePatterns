@@ -18,8 +18,6 @@ class GAMEPATTERNS_API AGamePatternsTestActor : public AActor
 public:
     AGamePatternsTestActor();
 
-    virtual void Tick(float DeltaTime) override;
-
     UPROPERTY(EditDefaultsOnly, Category = "Object Pool")
     FActorPool ActorPool;
 
@@ -55,4 +53,5 @@ private:
 
     void StartCommandStackTest();
     void StartSingletonTest();
+    void StartServiceLocatorTest();
 };
