@@ -54,4 +54,5 @@ private:
     void ReturnActorToPool();
 
     void StartCommandStackTest();
+    void StartSingletonTest();
 };

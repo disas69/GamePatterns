@@ -2,6 +2,7 @@
 
 #include "GamePatternsTestActor.h"
 #include "Command/ActionCommand.h"
+#include "Singleton/GameStateSubsystem.h"
 
 AGamePatternsTestActor::AGamePatternsTestActor()
 {
@@ -15,6 +16,8 @@ void AGamePatternsTestActor::BeginPlay()
     // StartObjectPoolTest();
 
     // StartCommandStackTest();
+
+    StartSingletonTest();
 }
 
 void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -72,25 +75,11 @@ void AGamePatternsTestActor::ReturnActorToPool()
 void AGamePatternsTestActor::StartCommandStackTest()
 {
     UActionCommand* MoveCommand = NewObject<UActionCommand>(this);
-    MoveCommand->Initialize([this]()
-    {
-        UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Execute"));
-    },
-    [this]()
-    {
-        UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Undo"));
-    });
+    MoveCommand->Initialize([this]() { UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Execute")); }, [this]() { UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Undo")); });
     Commands.Add(MoveCommand);
 
     UActionCommand* JumpCommand = NewObject<UActionCommand>(this);
-    JumpCommand->Initialize([this]()
-    {
-        UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Execute"));
-    },
-    [this]()
-    {
-        UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Undo"));
-    });
+    JumpCommand->Initialize([this]() { UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Execute")); }, [this]() { UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Undo")); });
     Commands.Add(JumpCommand);
 
     CommandStack.AddCommand(MoveCommand);
@@ -98,7 +87,7 @@ void AGamePatternsTestActor::StartCommandStackTest()
     CommandStack.ProcessCommands();
 
     CommandStack.UndoLastCommand();
-    
+
     CommandStack.AddCommand(MoveCommand);
     CommandStack.AddCommand(MoveCommand);
     CommandStack.ProcessCommands();
@@ -107,6 +96,16 @@ void AGamePatternsTestActor::StartCommandStackTest()
     {
         CommandStack.UndoLastCommand();
     }
+}
+
+void AGamePatternsTestActor::StartSingletonTest()
+{
+    // UGameStateSubsystem is a singleton based on UGameInstanceSubsystem
+    UGameStateSubsystem::GetInstance()->SetState(EGameState::MainMenu);
+    
+    UGameStateSubsystem::GetInstance()->SetState(EGameState::InGame);
+    
+    UGameStateSubsystem::GetInstance()->SetState(EGameState::GameOver);
 }
 
 void AGamePatternsTestActor::Tick(float DeltaTime)
