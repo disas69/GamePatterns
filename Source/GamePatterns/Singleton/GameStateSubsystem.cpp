@@ -24,6 +24,11 @@ void UGameStateSubsystem::SetState(EGameState NewState)
     GameStateMachine.SetState(NewState);
 }
 
+EGameState UGameStateSubsystem::GetState() const
+{
+    return GameStateMachine.GetCurrentState();
+}
+
 void UGameStateSubsystem::OnOpenMenu()
 {
     GameStateMachine.SetState(EGameState::InGame);
@@ -41,21 +46,9 @@ void UGameStateSubsystem::OnEndGame()
 
 void UGameStateSubsystem::InitializeStateMachine()
 {
-    GameStateMachine.AddTransition(EGameState::None, EGameState::MainMenu,
-        [this]()
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Opening menu"));
-        });
+    GameStateMachine.AddTransition(EGameState::None, EGameState::MainMenu, [this]() { UE_LOG(LogTemp, Warning, TEXT("Opening menu")); });
 
-    GameStateMachine.AddTransition(EGameState::MainMenu, EGameState::InGame,
-        [this]()
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Starting game"));
-        });
+    GameStateMachine.AddTransition(EGameState::MainMenu, EGameState::InGame, [this]() { UE_LOG(LogTemp, Warning, TEXT("Starting game")); });
 
-    GameStateMachine.AddTransition(EGameState::InGame, EGameState::GameOver,
-        [this]()
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Ending game"));
-        });
+    GameStateMachine.AddTransition(EGameState::InGame, EGameState::GameOver, [this]() { UE_LOG(LogTemp, Warning, TEXT("Ending game")); });
 }

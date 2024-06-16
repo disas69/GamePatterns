@@ -21,6 +21,7 @@ public:
     virtual void Deinitialize() override;
 
     void SetState(EGameState NewState);
+    EGameState GetState() const;
 private:
     TFStateMachine<EGameState> GameStateMachine;
 

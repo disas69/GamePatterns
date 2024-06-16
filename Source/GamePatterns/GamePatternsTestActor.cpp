@@ -19,7 +19,7 @@ void AGamePatternsTestActor::BeginPlay()
 
     // StartCommandStackTest();
 
-    // StartSingletonTest();
+    // StartStateMachineTest();
 
     StartServiceLocatorTest();
 }
@@ -78,38 +78,66 @@ void AGamePatternsTestActor::ReturnActorToPool()
 
 void AGamePatternsTestActor::StartCommandStackTest()
 {
+    // Create and initialize action commands
     UActionCommand* MoveCommand = NewObject<UActionCommand>(this);
-    MoveCommand->Initialize([this]() { UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Execute")); }, [this]() { UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Undo")); });
+    MoveCommand->Initialize([this]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Execute"));
+    }, [this]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Undo"));
+    });
     Commands.Add(MoveCommand);
 
     UActionCommand* JumpCommand = NewObject<UActionCommand>(this);
-    JumpCommand->Initialize([this]() { UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Execute")); }, [this]() { UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Undo")); });
+    JumpCommand->Initialize([this]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Execute"));
+    }, [this]()
+    {
+        UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Undo"));
+    });
     Commands.Add(JumpCommand);
 
+    // Add 2 commands to the stack
     CommandStack.AddCommand(MoveCommand);
     CommandStack.AddCommand(JumpCommand);
+
+    // Process commands
     CommandStack.ProcessCommands();
 
+    // Undo last processed command
     CommandStack.UndoLastCommand();
 
+    // Add 2 more commands to the stack
     CommandStack.AddCommand(MoveCommand);
     CommandStack.AddCommand(MoveCommand);
+
+    // Process all commands
     CommandStack.ProcessCommands();
 
+    // Undo all commands
     while (CommandStack.GetExecutedCommandsNum() > 0)
     {
         CommandStack.UndoLastCommand();
     }
 }
 
-void AGamePatternsTestActor::StartSingletonTest()
+void AGamePatternsTestActor::StartStateMachineTest()
 {
     // UGameStateSubsystem is a singleton based on UGameInstanceSubsystem
+    
+    // Switch the state of the GameStateMachine from None to MainMenu
     UGameStateSubsystem::GetInstance()->SetState(EGameState::MainMenu);
 
+    // To InGame
     UGameStateSubsystem::GetInstance()->SetState(EGameState::InGame);
 
+    // To GameOver
     UGameStateSubsystem::GetInstance()->SetState(EGameState::GameOver);
+
+    const EGameState CurrentState = UGameStateSubsystem::GetInstance()->GetState();
+    UE_LOG(LogTemp, Warning, TEXT("Current state: %s"), *UEnum::GetValueAsString(CurrentState));
 }
 
 void AGamePatternsTestActor::StartServiceLocatorTest()

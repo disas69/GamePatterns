@@ -52,6 +52,6 @@ private:
     void ReturnActorToPool();
 
     void StartCommandStackTest();
-    void StartSingletonTest();
+    void StartStateMachineTest();
     void StartServiceLocatorTest();
 };
