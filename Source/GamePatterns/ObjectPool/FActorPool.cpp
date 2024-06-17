@@ -1,6 +1,7 @@
 ﻿// Game Programming Patterns, Eugene Esaulenko, 2024
 
 #include "FActorPool.h"
+#include "PooledActor.h"
 
 void FActorPool::Initialize(UWorld* World)
 {
@@ -26,13 +27,13 @@ void FActorPool::Initialize(UWorld* World)
 
     for (int32 i = 0; i < PoolSize; i++)
     {
-        AActor* Actor = WorldContext->SpawnActor<AActor>(ActorClass);
-        ResetActor(Actor);
+        APooledActor* Actor = WorldContext->SpawnActor<APooledActor>(ActorClass);
+        Actor->OnReturnToPool();
         Pool.Add(Actor);
     }
 }
 
-AActor* FActorPool::GetActor()
+APooledActor* FActorPool::GetActor()
 {
     if (Pool.IsEmpty())
     {
@@ -42,10 +43,10 @@ AActor* FActorPool::GetActor()
             if (WorldContext != nullptr)
             {
                 ++PoolSize;
-            
-                AActor* Actor = WorldContext->SpawnActor<AActor>(ActorClass);
-                PrepareActor(Actor);
-                
+
+                APooledActor* Actor = WorldContext->SpawnActor<APooledActor>(ActorClass);
+                Actor->OnSpawnFromPool();
+
                 return Actor;
             }
             else
@@ -57,23 +58,23 @@ AActor* FActorPool::GetActor()
         {
             UE_LOG(LogTemp, Warning, TEXT("Pool is empty"));
         }
-        
+
         return nullptr;
     }
 
     UE_LOG(LogTemp, Warning, TEXT("Getting actor from pool"));
 
     const int32 Index = Pool.Num() - 1;
-    AActor* Actor = Pool[Index];
+    APooledActor* Actor = Pool[Index];
     Pool.RemoveAt(Index);
-    PrepareActor(Actor);
-    
+    Actor->OnSpawnFromPool();
+
     return Actor;
 }
 
-void FActorPool::ReturnActor(AActor* Actor)
+void FActorPool::ReturnActor(APooledActor* Actor)
 {
-    ResetActor(Actor);
+    Actor->OnReturnToPool();
     Pool.Add(Actor);
 
     UE_LOG(LogTemp, Warning, TEXT("Retured actor to pool"));
@@ -84,7 +85,7 @@ void FActorPool::Clear()
     while (!Pool.IsEmpty())
     {
         const int32 Index = Pool.Num() - 1;
-        AActor* Actor = Pool[Index];
+        APooledActor* Actor = Pool[Index];
         Pool.RemoveAt(Index);
 
         if (Actor != nullptr)
@@ -92,35 +93,4 @@ void FActorPool::Clear()
             Actor->Destroy();
         }
     }
-}
-
-void FActorPool::PrepareActor(AActor* Actor)
-{
-    Actor->SetActorHiddenInGame(false);
-    Actor->SetActorEnableCollision(true);
-    
-    for (UActorComponent* Component : Actor->GetComponents())
-    {
-        if (UPrimitiveComponent* PrimComp = Cast<UPrimitiveComponent>(Component))
-        {
-            PrimComp->SetSimulatePhysics(true);
-        }
-    }
-}
-
-void FActorPool::ResetActor(AActor* Actor)
-{
-    Actor->SetActorHiddenInGame(true);
-    Actor->SetActorEnableCollision(false);
-    
-    for (UActorComponent* Component : Actor->GetComponents())
-    {
-        if (UPrimitiveComponent* PrimComp = Cast<UPrimitiveComponent>(Component))
-        {
-            PrimComp->SetSimulatePhysics(false);
-        }
-    }
-
-    Actor->SetActorLocation(FVector::ZeroVector);
-    Actor->SetActorRotation(FRotator::ZeroRotator);
 }

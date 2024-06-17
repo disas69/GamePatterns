@@ -5,13 +5,15 @@
 #include "CoreMinimal.h"
 #include "FActorPool.generated.h"
 
+class APooledActor;
+
 USTRUCT(BlueprintType)
 struct FActorPool
 {
     GENERATED_USTRUCT_BODY()
 
     UPROPERTY(EditDefaultsOnly, Category = "Object Pool")
-    TSubclassOf<AActor> ActorClass = nullptr;
+    TSubclassOf<APooledActor> ActorClass = nullptr;
 
     UPROPERTY(EditDefaultsOnly, Category = "Object Pool")
     int32 PoolSize = 10;
@@ -23,8 +25,8 @@ struct FActorPool
     int32 GetPoolNum() const { return Pool.Num(); }
 
     void Initialize(UWorld* World);
-    AActor* GetActor();
-    void ReturnActor(AActor* Actor);
+    APooledActor* GetActor();
+    void ReturnActor(APooledActor* Actor);
     void Clear();
 
 private:
@@ -32,8 +34,5 @@ private:
     UWorld* WorldContext = nullptr;
 
     UPROPERTY()
-    TArray<AActor*> Pool;
-
-    void PrepareActor(AActor* Actor);
-    void ResetActor(AActor* Actor);
+    TArray<APooledActor*> Pool;
 };

@@ -3,6 +3,7 @@
 #include "GamePatternsTestActor.h"
 #include "Command/ActionCommand.h"
 #include "EventQueue/AudioEvent.h"
+#include "ObjectPool/PooledActor.h"
 #include "ServiceLocator/AudioService.h"
 #include "ServiceLocator/ServiceLocatorSubsystem.h"
 #include "Singleton/GameStateSubsystem.h"
@@ -24,7 +25,7 @@ void AGamePatternsTestActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    // StartObjectPoolTest();
+    StartObjectPoolTest();
 
     // StartCommandStackTest();
 
@@ -32,7 +33,7 @@ void AGamePatternsTestActor::BeginPlay()
 
     // StartServiceLocatorTest();
 
-    StartEventQueueTest();
+    // StartEventQueueTest();
 }
 
 void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -41,7 +42,7 @@ void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
     while (!ActiveActors.IsEmpty())
     {
-        AActor* Actor = ActiveActors[0];
+        APooledActor* Actor = ActiveActors[0];
         if (Actor != nullptr)
         {
             ActorPool.ReturnActor(Actor);
@@ -66,7 +67,7 @@ void AGamePatternsTestActor::StartObjectPoolTest()
 
 void AGamePatternsTestActor::SpawnPooledActor()
 {
-    AActor* Actor = ActorPool.GetActor();
+    APooledActor* Actor = ActorPool.GetActor();
     if (Actor == nullptr)
     {
         return;

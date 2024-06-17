@@ -52,7 +52,7 @@ private:
     FTimerHandle EventQueueTimerHandle;
 
     UPROPERTY()
-    TArray<AActor*> ActiveActors;
+    TArray<APooledActor*> ActiveActors;
 
     UPROPERTY()
     TArray<UActionCommand*> Commands;
