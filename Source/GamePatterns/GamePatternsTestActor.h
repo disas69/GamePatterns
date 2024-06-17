@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Command/FCommandStack.h"
+#include "EventQueue/FEventQueue.h"
 #include "GameFramework/Actor.h"
 #include "ObjectPool/FActorPool.h"
 #include "GamePatternsTestActor.generated.h"
@@ -33,6 +34,14 @@ public:
     UPROPERTY(EditDefaultsOnly, Category = "Command Stack")
     FCommandStack CommandStack;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Event Queue")
+    FEventQueue EventQueue;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Event Queue")
+    float EventQueueInterval = 1.0f;
+
+    virtual void Tick(float DeltaTime) override;
+
 protected:
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -40,6 +49,7 @@ protected:
 private:
     FTimerHandle SpawnTimerHandle;
     FTimerHandle ReturnTimerHandle;
+    FTimerHandle EventQueueTimerHandle;
 
     UPROPERTY()
     TArray<AActor*> ActiveActors;
@@ -50,8 +60,9 @@ private:
     void StartObjectPoolTest();
     void SpawnPooledActor();
     void ReturnActorToPool();
-
     void StartCommandStackTest();
     void StartStateMachineTest();
     void StartServiceLocatorTest();
+    void StartEventQueueTest();
+    void EnqueueEvent();
 };

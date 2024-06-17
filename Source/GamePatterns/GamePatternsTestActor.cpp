@@ -2,13 +2,22 @@
 
 #include "GamePatternsTestActor.h"
 #include "Command/ActionCommand.h"
+#include "EventQueue/AudioEvent.h"
 #include "ServiceLocator/AudioService.h"
 #include "ServiceLocator/ServiceLocatorSubsystem.h"
 #include "Singleton/GameStateSubsystem.h"
 
 AGamePatternsTestActor::AGamePatternsTestActor()
 {
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
+}
+
+void AGamePatternsTestActor::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    // Process event queue
+    EventQueue.ProcessEvents();
 }
 
 void AGamePatternsTestActor::BeginPlay()
@@ -21,7 +30,9 @@ void AGamePatternsTestActor::BeginPlay()
 
     // StartStateMachineTest();
 
-    StartServiceLocatorTest();
+    // StartServiceLocatorTest();
+
+    StartEventQueueTest();
 }
 
 void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -148,7 +159,7 @@ void AGamePatternsTestActor::StartServiceLocatorTest()
     {
         AudioService->PlayAudio(nullptr);
     }
-    
+
     // Register new audio service instance
     UServiceLocatorSubsystem::RegisterService<UAudioService>(NewObject<UAudioService>());
 
@@ -161,4 +172,27 @@ void AGamePatternsTestActor::StartServiceLocatorTest()
 
     // Unregister audio service instance
     UServiceLocatorSubsystem::UnregisterService<UAudioService>();
+}
+
+void AGamePatternsTestActor::StartEventQueueTest()
+{
+    GetWorld()->GetTimerManager().SetTimer(EventQueueTimerHandle, this, &AGamePatternsTestActor::EnqueueEvent, EventQueueInterval, true);
+}
+
+void AGamePatternsTestActor::EnqueueEvent()
+{
+    // Create and initialize audio events
+    UAudioEvent* AudioEvent1 = NewObject<UAudioEvent>(this);
+    AudioEvent1->Initialize(1);
+
+    UAudioEvent* AudioEvent2 = NewObject<UAudioEvent>(this);
+    AudioEvent2->Initialize(2);
+
+    UAudioEvent* AudioEvent3 = NewObject<UAudioEvent>(this);
+    AudioEvent3->Initialize(3);
+
+    // Add events to the queue, they will be processed later in the Tick method
+    EventQueue.AddEvent(AudioEvent1);
+    EventQueue.AddEvent(AudioEvent2);
+    EventQueue.AddEvent(AudioEvent3);
 }
