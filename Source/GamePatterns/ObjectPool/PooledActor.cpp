@@ -1,6 +1,7 @@
 ﻿// Game Programming Patterns, Eugene Esaulenko, 2024
 
 #include "PooledActor.h"
+#include "ActorPool.h"
 
 APooledActor::APooledActor()
 {
@@ -15,6 +16,11 @@ void APooledActor::BeginPlay()
 void APooledActor::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+}
+
+void APooledActor::Initialize(UActorPool* Pool)
+{
+    OwnerPool = Pool;
 }
 
 void APooledActor::OnSpawnFromPool()
@@ -46,4 +52,12 @@ void APooledActor::OnReturnToPool()
 
     SetActorLocation(FVector::ZeroVector);
     SetActorRotation(FRotator::ZeroRotator);
+}
+
+void APooledActor::Return()
+{
+    if (OwnerPool != nullptr)
+    {
+        OwnerPool->ReturnActor(this);
+    }
 }

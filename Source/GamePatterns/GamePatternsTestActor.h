@@ -6,9 +6,10 @@
 #include "Command/FCommandStack.h"
 #include "EventQueue/FEventQueue.h"
 #include "GameFramework/Actor.h"
-#include "ObjectPool/FActorPool.h"
+#include "ObjectPool/FActorPoolParams.h"
 #include "GamePatternsTestActor.generated.h"
 
+class UActorPool;
 class UActionCommand;
 
 UCLASS()
@@ -20,7 +21,7 @@ public:
     AGamePatternsTestActor();
 
     UPROPERTY(EditDefaultsOnly, Category = "Object Pool")
-    FActorPool ActorPool;
+    FActorPoolParams ActorPoolParams;
 
     UPROPERTY(EditDefaultsOnly, Category = "Object Pool")
     FVector SpawnLocation = FVector::ZeroVector;
@@ -50,6 +51,9 @@ private:
     FTimerHandle SpawnTimerHandle;
     FTimerHandle ReturnTimerHandle;
     FTimerHandle EventQueueTimerHandle;
+
+    UPROPERTY()
+    UActorPool* ActorPool = nullptr;
 
     UPROPERTY()
     TArray<APooledActor*> ActiveActors;

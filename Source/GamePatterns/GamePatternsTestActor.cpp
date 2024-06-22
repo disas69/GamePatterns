@@ -3,6 +3,7 @@
 #include "GamePatternsTestActor.h"
 #include "Command/ActionCommand.h"
 #include "EventQueue/AudioEvent.h"
+#include "ObjectPool/ActorPool.h"
 #include "ObjectPool/PooledActor.h"
 #include "ServiceLocator/AudioService.h"
 #include "ServiceLocator/ServiceLocatorSubsystem.h"
@@ -40,23 +41,27 @@ void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
 
-    while (!ActiveActors.IsEmpty())
+    if (ActorPool != nullptr)
     {
-        APooledActor* Actor = ActiveActors[0];
-        if (Actor != nullptr)
+        while (!ActiveActors.IsEmpty())
         {
-            ActorPool.ReturnActor(Actor);
+            APooledActor* Actor = ActiveActors[0];
+            if (Actor != nullptr)
+            {
+                Actor->Return();
+            }
+            ActiveActors.RemoveAt(0);
         }
-        ActiveActors.RemoveAt(0);
-    }
 
-    ActorPool.Clear();
+        ActorPool->Clear();
+    }
 }
 
 void AGamePatternsTestActor::StartObjectPoolTest()
 {
     // Initialize actor pool
-    ActorPool.Initialize(GetWorld());
+    ActorPool = NewObject<UActorPool>(this);
+    ActorPool->Initialize(ActorPoolParams);
 
     // Start spawning actors
     GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AGamePatternsTestActor::SpawnPooledActor, SpawnInterval, true);
@@ -67,7 +72,12 @@ void AGamePatternsTestActor::StartObjectPoolTest()
 
 void AGamePatternsTestActor::SpawnPooledActor()
 {
-    APooledActor* Actor = ActorPool.GetActor();
+    if (ActorPool == nullptr)
+    {
+        return;
+    }
+    
+    APooledActor* Actor = ActorPool->GetActor();
     if (Actor == nullptr)
     {
         return;
@@ -79,12 +89,12 @@ void AGamePatternsTestActor::SpawnPooledActor()
 
 void AGamePatternsTestActor::ReturnActorToPool()
 {
-    if (ActiveActors.Num() == 0)
+    if (ActorPool == nullptr || ActiveActors.Num() == 0)
     {
         return;
     }
 
-    ActorPool.ReturnActor(ActiveActors[0]);
+    ActiveActors[0]->Return();
     ActiveActors.RemoveAt(0);
 }
 

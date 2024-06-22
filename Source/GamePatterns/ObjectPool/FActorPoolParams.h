@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FActorPool.generated.h"
+#include "FActorPoolParams.generated.h"
 
 class APooledActor;
 
 USTRUCT(BlueprintType)
-struct FActorPool
+struct FActorPoolParams
 {
     GENERATED_USTRUCT_BODY()
 
@@ -20,19 +20,4 @@ struct FActorPool
 
     UPROPERTY(EditDefaultsOnly, Category = "Object Pool")
     bool IsAutoExpandable = true;
-
-    int32 GetPoolSize() const { return PoolSize; }
-    int32 GetPoolNum() const { return Pool.Num(); }
-
-    void Initialize(UWorld* World);
-    APooledActor* GetActor();
-    void ReturnActor(APooledActor* Actor);
-    void Clear();
-
-private:
-    UPROPERTY()
-    UWorld* WorldContext = nullptr;
-
-    UPROPERTY()
-    TArray<APooledActor*> Pool;
 };
