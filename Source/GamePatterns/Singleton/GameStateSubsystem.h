@@ -26,7 +26,4 @@ private:
     TFStateMachine<EGameState> GameStateMachine;
 
     void InitializeStateMachine();
-    void OnOpenMenu();
-    void OnStartGame();
-    void OnEndGame();
 };

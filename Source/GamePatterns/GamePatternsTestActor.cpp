@@ -26,11 +26,11 @@ void AGamePatternsTestActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    StartObjectPoolTest();
+    // StartObjectPoolTest();
 
     // StartCommandStackTest();
 
-    // StartStateMachineTest();
+    StartStateMachineTest();
 
     // StartServiceLocatorTest();
 
@@ -160,6 +160,9 @@ void AGamePatternsTestActor::StartStateMachineTest()
 
     const EGameState CurrentState = UGameStateSubsystem::GetInstance()->GetState();
     UE_LOG(LogTemp, Warning, TEXT("Current state: %s"), *UEnum::GetValueAsString(CurrentState));
+
+    // Back to InGame
+    UGameStateSubsystem::GetInstance()->SetState(EGameState::InGame);
 }
 
 void AGamePatternsTestActor::StartServiceLocatorTest()

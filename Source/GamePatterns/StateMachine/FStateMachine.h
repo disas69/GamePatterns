@@ -14,7 +14,7 @@ struct TFStateMachine
 
     ~TFStateMachine()
     {
-        Transitions.Empty();
+        TransitionsMap.Empty();
     }
 
     T GetCurrentState() const
@@ -24,7 +24,12 @@ struct TFStateMachine
 
     void AddTransition(T From, T To, TFunction<void()> Transition)
     {
-        Transitions.FindOrAdd(From).Add(To, Transition);
+        TransitionsMap.FindOrAdd(From).Add(To, Transition);
+    }
+
+    void AddTransitions(T From, TMap<T, TFunction<void()>> Transitions)
+    {
+        TransitionsMap.FindOrAdd(From).Append(Transitions);
     }
 
     void SetState(T NewState)
@@ -34,7 +39,7 @@ struct TFStateMachine
             return;
         }
 
-        auto MapFrom = Transitions.Find(CurrentState);
+        auto MapFrom = TransitionsMap.Find(CurrentState);
         if (MapFrom != nullptr)
         {
             auto Transition = MapFrom->Find(NewState);
@@ -51,5 +56,5 @@ struct TFStateMachine
 
 private:
     T CurrentState;
-    TMap<T, TMap<T, TFunction<void()>>> Transitions;
+    TMap<T, TMap<T, TFunction<void()>>> TransitionsMap;
 };

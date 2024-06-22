@@ -29,21 +29,6 @@ EGameState UGameStateSubsystem::GetState() const
     return GameStateMachine.GetCurrentState();
 }
 
-void UGameStateSubsystem::OnOpenMenu()
-{
-    GameStateMachine.SetState(EGameState::InGame);
-}
-
-void UGameStateSubsystem::OnStartGame()
-{
-    GameStateMachine.SetState(EGameState::GameOver);
-}
-
-void UGameStateSubsystem::OnEndGame()
-{
-    GameStateMachine.SetState(EGameState::None);
-}
-
 void UGameStateSubsystem::InitializeStateMachine()
 {
     GameStateMachine.AddTransition(EGameState::None, EGameState::MainMenu, [this]() { UE_LOG(LogTemp, Warning, TEXT("Opening menu")); });
@@ -51,4 +36,9 @@ void UGameStateSubsystem::InitializeStateMachine()
     GameStateMachine.AddTransition(EGameState::MainMenu, EGameState::InGame, [this]() { UE_LOG(LogTemp, Warning, TEXT("Starting game")); });
 
     GameStateMachine.AddTransition(EGameState::InGame, EGameState::GameOver, [this]() { UE_LOG(LogTemp, Warning, TEXT("Ending game")); });
+
+    GameStateMachine.AddTransitions(EGameState::GameOver, {
+        {EGameState::MainMenu, [this]() { UE_LOG(LogTemp, Warning, TEXT("Opening menu")); }},
+        {EGameState::InGame, [this]() { UE_LOG(LogTemp, Warning, TEXT("Restarting game")); }}
+    });
 }
