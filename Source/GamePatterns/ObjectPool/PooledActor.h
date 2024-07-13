@@ -17,16 +17,11 @@ class GAMEPATTERNS_API APooledActor : public AActor
 public:
     APooledActor();
 
-    virtual void Tick(float DeltaTime) override;
-
     virtual void Initialize(UActorPool* Pool);
     virtual void OnSpawnFromPool();
     virtual void OnReturnToPool();
 
     void Return();
-
-protected:
-    virtual void BeginPlay() override;
 
 private:
     UPROPERTY()

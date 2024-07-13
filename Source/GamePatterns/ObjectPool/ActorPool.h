@@ -17,8 +17,9 @@ class GAMEPATTERNS_API UActorPool : public UObject
 public:
     UActorPool() = default;
 
-    void Initialize(const FActorPoolParams& Params);
-
+    // Actor pool factory method, the only way to create an actor pool
+    static UActorPool* CreatePool(UObject* Outer, const FActorPoolParams Params);
+    
     int32 GetPoolSize() const { return PoolParams.PoolSize; }
     int32 GetPoolNum() const { return Pool.Num(); }
 
@@ -31,4 +32,6 @@ private:
     
     UPROPERTY()
     TArray<APooledActor*> Pool;
+
+    void Initialize(const FActorPoolParams Params);
 };

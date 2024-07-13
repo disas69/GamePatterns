@@ -8,16 +8,6 @@ APooledActor::APooledActor()
     PrimaryActorTick.bCanEverTick = true;
 }
 
-void APooledActor::BeginPlay()
-{
-    Super::BeginPlay();
-}
-
-void APooledActor::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-}
-
 void APooledActor::Initialize(UActorPool* Pool)
 {
     OwnerPool = Pool;

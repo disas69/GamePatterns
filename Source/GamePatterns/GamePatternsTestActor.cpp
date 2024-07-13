@@ -3,7 +3,7 @@
 #include "GamePatternsTestActor.h"
 #include "Command/ActionCommand.h"
 #include "EventQueue/AudioEvent.h"
-#include "ObjectPool/ActorPool.h"
+#include "ObjectPool/ActorPoolComponent.h"
 #include "ObjectPool/PooledActor.h"
 #include "ServiceLocator/AudioService.h"
 #include "ServiceLocator/ServiceLocatorSubsystem.h"
@@ -12,6 +12,7 @@
 AGamePatternsTestActor::AGamePatternsTestActor()
 {
     PrimaryActorTick.bCanEverTick = true;
+    ActorPoolComponent = CreateDefaultSubobject<UActorPoolComponent>(TEXT("ActorPoolComponent"));
 }
 
 void AGamePatternsTestActor::Tick(float DeltaTime)
@@ -26,11 +27,11 @@ void AGamePatternsTestActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    // StartObjectPoolTest();
+    StartObjectPoolTest();
 
     // StartCommandStackTest();
 
-    StartStateMachineTest();
+    // StartStateMachineTest();
 
     // StartServiceLocatorTest();
 
@@ -41,27 +42,23 @@ void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
 
-    if (ActorPool != nullptr)
+    while (!ActiveActors.IsEmpty())
     {
-        while (!ActiveActors.IsEmpty())
+        APooledActor* Actor = ActiveActors[0];
+        if (Actor != nullptr)
         {
-            APooledActor* Actor = ActiveActors[0];
-            if (Actor != nullptr)
-            {
-                Actor->Return();
-            }
-            ActiveActors.RemoveAt(0);
+            Actor->Return();
         }
-
-        ActorPool->Clear();
+        ActiveActors.RemoveAt(0);
     }
+
+    ActorPoolComponent->DestroyPool();
 }
 
 void AGamePatternsTestActor::StartObjectPoolTest()
 {
     // Initialize actor pool
-    ActorPool = NewObject<UActorPool>(this);
-    ActorPool->Initialize(ActorPoolParams);
+    ActorPoolComponent->CreatePool();
 
     // Start spawning actors
     GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AGamePatternsTestActor::SpawnPooledActor, SpawnInterval, true);
@@ -72,12 +69,7 @@ void AGamePatternsTestActor::StartObjectPoolTest()
 
 void AGamePatternsTestActor::SpawnPooledActor()
 {
-    if (ActorPool == nullptr)
-    {
-        return;
-    }
-    
-    APooledActor* Actor = ActorPool->GetActor();
+    APooledActor* Actor = ActorPoolComponent->GetActor();
     if (Actor == nullptr)
     {
         return;
@@ -89,7 +81,7 @@ void AGamePatternsTestActor::SpawnPooledActor()
 
 void AGamePatternsTestActor::ReturnActorToPool()
 {
-    if (ActorPool == nullptr || ActiveActors.Num() == 0)
+    if (ActiveActors.Num() == 0)
     {
         return;
     }

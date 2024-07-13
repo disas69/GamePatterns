@@ -4,7 +4,14 @@
 #include "FActorPoolParams.h"
 #include "PooledActor.h"
 
-void UActorPool::Initialize(const FActorPoolParams& Params)
+UActorPool* UActorPool::CreatePool(UObject* Outer, const FActorPoolParams Params)
+{
+    UActorPool* Pool = NewObject<UActorPool>(Outer);
+    Pool->Initialize(Params);
+    return Pool;
+}
+
+void UActorPool::Initialize(const FActorPoolParams Params)
 {
     if (Params.ActorClass == nullptr)
     {
