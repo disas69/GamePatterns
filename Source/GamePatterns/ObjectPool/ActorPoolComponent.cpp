@@ -2,6 +2,7 @@
 
 #include "ActorPoolComponent.h"
 #include "ActorPool.h"
+#include "PooledActor.h"
 
 UActorPoolComponent::UActorPoolComponent()
 {
@@ -60,9 +61,17 @@ APooledActor* UActorPoolComponent::GetActor() const
 
 void UActorPoolComponent::ReturnActor(APooledActor* Actor) const
 {
-    if (ActorPool != nullptr)
+    if (ActorPool != nullptr && Actor != nullptr)
     {
-        ActorPool->ReturnActor(Actor);
+        if (Actor->GetOwnerPool() == ActorPool)
+        {
+            ActorPool->ReturnActor(Actor);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Actor does not belong to target pool: %s"), *Actor->GetName());
+            Actor->Return();
+        }
     }
 }
 

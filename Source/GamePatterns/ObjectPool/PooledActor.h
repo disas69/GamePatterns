@@ -21,6 +21,8 @@ public:
     virtual void OnSpawnFromPool();
     virtual void OnReturnToPool();
 
+    UActorPool* GetOwnerPool() const { return OwnerPool; }
+    
     void Return();
 
 private:
