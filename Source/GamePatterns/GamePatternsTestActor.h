@@ -9,6 +9,7 @@
 #include "ObjectPool/FActorPoolParams.h"
 #include "GamePatternsTestActor.generated.h"
 
+class UCharacterStateComponent;
 class UActorPoolComponent;
 class UActorPool;
 class UActionCommand;
@@ -32,6 +33,9 @@ public:
 
     UPROPERTY(EditDefaultsOnly, Category = "Object Pool")
     float ReturnInterval = 1.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+    UCharacterStateComponent* CharacterStateComponent = nullptr;
 
     UPROPERTY(EditDefaultsOnly, Category = "Command Stack")
     FCommandStack CommandStack;

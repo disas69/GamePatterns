@@ -5,14 +5,14 @@
 #include "CoreMinimal.h"
 
 template <typename T>
-struct TFStateMachine
+struct TStateMachine
 {
     static_assert(TIsEnum<T>::Value, "T must be an enum");
 
-    TFStateMachine() = default;
-    explicit TFStateMachine(T InitialState) : CurrentState(InitialState) {}
+    TStateMachine() = default;
+    explicit TStateMachine(T InitialState) : CurrentState(InitialState) {}
 
-    ~TFStateMachine()
+    ~TStateMachine()
     {
         TransitionsMap.Empty();
     }

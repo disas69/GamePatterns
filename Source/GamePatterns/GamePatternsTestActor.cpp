@@ -8,11 +8,13 @@
 #include "ServiceLocator/AudioService.h"
 #include "ServiceLocator/ServiceLocatorSubsystem.h"
 #include "Singleton/GameStateSubsystem.h"
+#include "State/CharacterStateComponent.h"
 
 AGamePatternsTestActor::AGamePatternsTestActor()
 {
     PrimaryActorTick.bCanEverTick = true;
     ActorPoolComponent = CreateDefaultSubobject<UActorPoolComponent>(TEXT("ActorPoolComponent"));
+    CharacterStateComponent = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterStateComponent"));
 }
 
 void AGamePatternsTestActor::Tick(float DeltaTime)
@@ -142,19 +144,19 @@ void AGamePatternsTestActor::StartStateMachineTest()
     // UGameStateSubsystem is a singleton based on UGameInstanceSubsystem
     
     // Switch the state of the GameStateMachine from None to MainMenu
-    UGameStateSubsystem::GetInstance()->SetState(EGameState::MainMenu);
+    UGameStateSubsystem::GetInstance()->SetState(ETestGameState::MainMenu);
 
     // To InGame
-    UGameStateSubsystem::GetInstance()->SetState(EGameState::InGame);
+    UGameStateSubsystem::GetInstance()->SetState(ETestGameState::InGame);
 
     // To GameOver
-    UGameStateSubsystem::GetInstance()->SetState(EGameState::GameOver);
+    UGameStateSubsystem::GetInstance()->SetState(ETestGameState::GameOver);
 
-    const EGameState CurrentState = UGameStateSubsystem::GetInstance()->GetState();
+    const ETestGameState CurrentState = UGameStateSubsystem::GetInstance()->GetState();
     UE_LOG(LogTemp, Warning, TEXT("Current state: %s"), *UEnum::GetValueAsString(CurrentState));
 
     // Back to InGame
-    UGameStateSubsystem::GetInstance()->SetState(EGameState::InGame);
+    UGameStateSubsystem::GetInstance()->SetState(ETestGameState::InGame);
 }
 
 void AGamePatternsTestActor::StartServiceLocatorTest()

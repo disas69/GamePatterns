@@ -3,7 +3,7 @@
 #pragma once
 
 UENUM(BlueprintType)
-enum class EGameState : uint8
+enum class ETestGameState : uint8
 {
     None,
     MainMenu,

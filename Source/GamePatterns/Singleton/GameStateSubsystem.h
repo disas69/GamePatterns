@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GamePatterns/StateMachine/EGameState.h"
-#include "GamePatterns/StateMachine/FStateMachine.h"
+#include "../StateMachine/TestGameState.h"
+#include "../StateMachine/StateMachine.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameStateSubsystem.generated.h"
 
@@ -20,10 +20,10 @@ public:
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
     virtual void Deinitialize() override;
 
-    void SetState(EGameState NewState);
-    EGameState GetState() const;
+    void SetState(ETestGameState NewState);
+    ETestGameState GetState() const;
 private:
-    TFStateMachine<EGameState> GameStateMachine;
+    TStateMachine<ETestGameState> GameStateMachine;
 
     void InitializeStateMachine();
 };
