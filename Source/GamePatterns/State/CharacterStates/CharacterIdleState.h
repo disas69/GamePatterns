@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CharacterStateBase.h"
+#include "CharacterState.h"
 #include "UObject/Object.h"
 #include "CharacterIdleState.generated.h"
 
 UCLASS()
-class GAMEPATTERNS_API UCharacterIdleState : public UCharacterStateBase
+class GAMEPATTERNS_API UCharacterIdleState : public UCharacterState
 {
     GENERATED_BODY()
 

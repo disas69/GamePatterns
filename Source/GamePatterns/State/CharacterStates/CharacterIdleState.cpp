@@ -19,4 +19,6 @@ void UCharacterIdleState::OnExit()
 void UCharacterIdleState::Update(float DeltaTime)
 {
     Super::Update(DeltaTime);
+    
+    UE_LOG(LogTemp, Warning, TEXT("IdleState: Update"));
 }

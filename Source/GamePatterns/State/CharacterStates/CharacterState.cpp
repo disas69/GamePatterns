@@ -1,8 +1,8 @@
 ﻿// Game Programming Patterns, Eugene Esaulenko, 2024
 
-#include "CharacterStateBase.h"
+#include "CharacterState.h"
 
-void UCharacterStateBase::Initialize(AActor* Owner)
+void UCharacterState::Initialize(ACharacter* Owner)
 {
     OwnerCharacter = Owner;
 }

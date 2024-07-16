@@ -8,7 +8,7 @@
 #include "Components/ActorComponent.h"
 #include "CharacterStateComponent.generated.h"
 
-class UCharacterStateBase;
+class UCharacterState;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class GAMEPATTERNS_API UCharacterStateComponent : public UActorComponent
@@ -34,7 +34,7 @@ private:
 
     // UPROPERTY container to ensure that the states UObjects are not garbage collected
     UPROPERTY()
-    TArray<UCharacterStateBase*> States;
+    TArray<UCharacterState*> States;
 
-    void AddState(ETestCharacterState StateType, UCharacterStateBase* State);
+    void AddState(ETestCharacterState StateType, UCharacterState* State);
 };

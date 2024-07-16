@@ -4,6 +4,7 @@
 #include "CharacterStates/CharacterIdleState.h"
 #include "CharacterStates/CharacterJumpState.h"
 #include "CharacterStates/CharacterMoveState.h"
+#include "GameFramework/Character.h"
 
 UCharacterStateComponent::UCharacterStateComponent()
 {
@@ -25,14 +26,18 @@ void UCharacterStateComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-    AddState(ETestCharacterState::Idle, UCharacterStateBase::Create<UCharacterIdleState>(this, GetOwner()));
-    AddState(ETestCharacterState::Move, UCharacterStateBase::Create<UCharacterMoveState>(this, GetOwner()));
-    AddState(ETestCharacterState::Jump, UCharacterStateBase::Create<UCharacterJumpState>(this, GetOwner()));
+    ACharacter* Owner = Cast<ACharacter>(GetOwner());
+    if (Owner != nullptr)
+    {
+        AddState(ETestCharacterState::Idle, UCharacterState::Create<UCharacterIdleState>(this, Owner));
+        AddState(ETestCharacterState::Move, UCharacterState::Create<UCharacterMoveState>(this, Owner));
+        AddState(ETestCharacterState::Jump, UCharacterState::Create<UCharacterJumpState>(this, Owner));
 
-    SetState(ETestCharacterState::Idle);
+        SetState(ETestCharacterState::Idle);
+    }
 }
 
-void UCharacterStateComponent::AddState(ETestCharacterState StateType, UCharacterStateBase* State)
+void UCharacterStateComponent::AddState(ETestCharacterState StateType, UCharacterState* State)
 {
     Controller.AddState(StateType, State);
     States.Add(State);

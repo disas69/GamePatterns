@@ -8,13 +8,11 @@
 #include "ServiceLocator/AudioService.h"
 #include "ServiceLocator/ServiceLocatorSubsystem.h"
 #include "Singleton/GameStateSubsystem.h"
-#include "State/CharacterStateComponent.h"
 
 AGamePatternsTestActor::AGamePatternsTestActor()
 {
     PrimaryActorTick.bCanEverTick = true;
     ActorPoolComponent = CreateDefaultSubobject<UActorPoolComponent>(TEXT("ActorPoolComponent"));
-    CharacterStateComponent = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterStateComponent"));
 }
 
 void AGamePatternsTestActor::Tick(float DeltaTime)
@@ -29,7 +27,7 @@ void AGamePatternsTestActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    StartObjectPoolTest();
+    // StartObjectPoolTest();
 
     // StartCommandStackTest();
 

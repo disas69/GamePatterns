@@ -5,27 +5,27 @@
 #include "CoreMinimal.h"
 #include "GamePatterns/State/State.h"
 #include "UObject/Object.h"
-#include "CharacterStateBase.generated.h"
+#include "CharacterState.generated.h"
 
 UCLASS()
-class GAMEPATTERNS_API UCharacterStateBase : public UState
+class GAMEPATTERNS_API UCharacterState : public UState
 {
     GENERATED_BODY()
 
 public:
-    UCharacterStateBase() = default;
+    UCharacterState() = default;
     
-    virtual void Initialize(AActor* Owner);
+    virtual void Initialize(ACharacter* Owner);
 
     template <typename T>
-    static T* Create(UObject* Outer, AActor* Owner)
+    static T* Create(UObject* Outer, ACharacter* Owner)
     {
         T* State = NewObject<T>(Outer);
         State->Initialize(Owner);
         return State;
     }
 
-private:
+protected:
     UPROPERTY()
-    AActor* OwnerCharacter = nullptr;
+    ACharacter* OwnerCharacter = nullptr;
 };

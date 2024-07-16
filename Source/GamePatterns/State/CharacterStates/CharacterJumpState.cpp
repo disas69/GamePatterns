@@ -1,6 +1,9 @@
 ﻿// Game Programming Patterns, Eugene Esaulenko, 2024
 
 #include "CharacterJumpState.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GamePatterns/GamePatternsTestCharacter.h"
 
 void UCharacterJumpState::OnEnter()
 {
@@ -19,4 +22,19 @@ void UCharacterJumpState::OnExit()
 void UCharacterJumpState::Update(float DeltaTime)
 {
     Super::Update(DeltaTime);
+
+    UE_LOG(LogTemp, Warning, TEXT("JumpState: Update"));
+
+    const bool bIsFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
+
+    if (bWasFalling && !bIsFalling)
+    {
+        const AGamePatternsTestCharacter* TestCharacter = Cast<AGamePatternsTestCharacter>(OwnerCharacter);
+        if (TestCharacter != nullptr)
+        {
+            TestCharacter->SetState(ETestCharacterState::Idle);
+        }
+    }
+
+    bWasFalling = bIsFalling;
 }
