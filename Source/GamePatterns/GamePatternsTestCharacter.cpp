@@ -36,11 +36,8 @@ void AGamePatternsTestCharacter::MoveForward(float X)
     const float Value = X * MoveSpeed;
     const FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
     AddMovementInput(Direction, Value);
-
-    if (FMath::Abs(Value) > 0.0f && CharacterStateComponent->GetState() != ETestCharacterState::Jump)
-    {
-        CharacterStateComponent->SetState(ETestCharacterState::Move);
-    }
+    
+    CharacterStateComponent->HandleMovementInput(Value);
 }
 
 void AGamePatternsTestCharacter::MoveRight(float Y)
@@ -49,10 +46,7 @@ void AGamePatternsTestCharacter::MoveRight(float Y)
     const FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
     AddMovementInput(Direction, Value);
 
-    if (FMath::Abs(Value) > 0.0f && CharacterStateComponent->GetState() != ETestCharacterState::Jump)
-    {
-        CharacterStateComponent->SetState(ETestCharacterState::Move);
-    }
+    CharacterStateComponent->HandleMovementInput(Value);
 }
 
 void AGamePatternsTestCharacter::Turn(float X)
@@ -70,6 +64,7 @@ void AGamePatternsTestCharacter::LookUp(float Y)
 void AGamePatternsTestCharacter::Jump()
 {
     Super::Jump();
+    
     CharacterStateComponent->SetState(ETestCharacterState::Jump);
 }
 

@@ -24,6 +24,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Character State")
     ETestCharacterState GetState() const;
 
+    UFUNCTION(BlueprintCallable, Category = "Character State")
+    void HandleMovementInput(float Value);
+
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:

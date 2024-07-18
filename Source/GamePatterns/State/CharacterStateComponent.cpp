@@ -22,6 +22,14 @@ ETestCharacterState UCharacterStateComponent::GetState() const
     return Controller.GetCurrentStateType();
 }
 
+void UCharacterStateComponent::HandleMovementInput(float Value)
+{
+    if (FMath::Abs(Value) > 0.0f && GetState() != ETestCharacterState::Jump)
+    {
+        SetState(ETestCharacterState::Move);
+    }
+}
+
 void UCharacterStateComponent::BeginPlay()
 {
     Super::BeginPlay();

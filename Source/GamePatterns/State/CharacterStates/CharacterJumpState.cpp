@@ -23,8 +23,6 @@ void UCharacterJumpState::Update(float DeltaTime)
 {
     Super::Update(DeltaTime);
 
-    UE_LOG(LogTemp, Warning, TEXT("JumpState: Update"));
-
     const bool bIsFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
 
     if (bWasFalling && !bIsFalling)

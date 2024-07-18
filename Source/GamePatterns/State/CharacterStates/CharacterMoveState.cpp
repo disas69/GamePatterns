@@ -24,8 +24,6 @@ void UCharacterMoveState::Update(float DeltaTime)
 {
     Super::Update(DeltaTime);
 
-    UE_LOG(LogTemp, Warning, TEXT("MoveState: Update"));
-
     const bool bIsMoving = OwnerCharacter->GetVelocity().SizeSquared() > 0.0f;
     const bool bIsFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
 
