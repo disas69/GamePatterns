@@ -2,10 +2,10 @@
 
 #include "ActionCommand.h"
 
-void UActionCommand::Initialize(const TFunction<void()>& InExecute, const TFunction<void()>& InUndo)
+void UActionCommand::Initialize(TFunction<void()> OnExecute, TFunction<void()> OnUndo)
 {
-    ExecuteFunc = InExecute;
-    UndoFunc = InUndo;
+    ExecuteFunc = OnExecute;
+    UndoFunc = OnUndo;
 }
 
 void UActionCommand::Execute()

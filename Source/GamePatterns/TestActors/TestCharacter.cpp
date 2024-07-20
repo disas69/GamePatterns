@@ -21,7 +21,6 @@ void ATestCharacter::Tick(float DeltaTime)
 void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-
     PlayerInputComponent->BindAxis("MoveForward", this, &ATestCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &ATestCharacter::MoveRight);
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ATestCharacter::Jump);
@@ -35,7 +34,6 @@ void ATestCharacter::MoveForward(float X)
     const float Value = X * MoveSpeed;
     const FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
     AddMovementInput(Direction, Value);
-    
     CharacterStateComponent->HandleMovementInput(Value);
 }
 
@@ -44,7 +42,6 @@ void ATestCharacter::MoveRight(float Y)
     const float Value = Y * MoveSpeed;
     const FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
     AddMovementInput(Direction, Value);
-
     CharacterStateComponent->HandleMovementInput(Value);
 }
 
@@ -63,7 +60,6 @@ void ATestCharacter::LookUp(float Y)
 void ATestCharacter::Jump()
 {
     Super::Jump();
-    
     CharacterStateComponent->SetState(ETestCharacterState::Jump);
 }
 

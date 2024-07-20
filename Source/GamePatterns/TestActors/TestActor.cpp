@@ -27,15 +27,15 @@ void ATestActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    // StartObjectPoolTest();
+    StartObjectPoolTest();
 
-    // StartCommandStackTest();
+    StartCommandStackTest();
 
     // StartStateMachineTest();
 
-    // StartServiceLocatorTest();
+    StartServiceLocatorTest();
 
-    // StartEventQueueTest();
+    StartEventQueueTest();
 }
 
 void ATestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -74,8 +74,9 @@ void ATestActor::SpawnPooledActor()
     {
         return;
     }
-    
-    Actor->SetActorLocation(SpawnLocation);
+
+    const FVector Location = GetActorLocation() + SpawnLocation;
+    Actor->SetActorLocation(Location);
     ActiveActors.Add(Actor);
 }
 
@@ -93,8 +94,7 @@ void ATestActor::ReturnActorToPool()
 void ATestActor::StartCommandStackTest()
 {
     // Create and initialize action commands
-    UActionCommand* MoveCommand = NewObject<UActionCommand>(this);
-    MoveCommand->Initialize([this]()
+    UActionCommand* MoveCommand = UActionCommand::Create([this]()
     {
         UE_LOG(LogTemp, Warning, TEXT("MoveCommand::Execute"));
     }, [this]()
@@ -103,8 +103,7 @@ void ATestActor::StartCommandStackTest()
     });
     Commands.Add(MoveCommand);
 
-    UActionCommand* JumpCommand = NewObject<UActionCommand>(this);
-    JumpCommand->Initialize([this]()
+    UActionCommand* JumpCommand = UActionCommand::Create([this]()
     {
         UE_LOG(LogTemp, Warning, TEXT("JumpCommand::Execute"));
     }, [this]()
@@ -140,7 +139,6 @@ void ATestActor::StartCommandStackTest()
 void ATestActor::StartStateMachineTest()
 {
     // UGameStateSubsystem is a singleton based on UGameInstanceSubsystem
-    
     // Switch the state of the GameStateMachine from None to MainMenu
     UGameStateSubsystem::GetInstance()->SetState(ETestGameState::MainMenu);
 
@@ -188,14 +186,9 @@ void ATestActor::StartEventQueueTest()
 void ATestActor::EnqueueEvent()
 {
     // Create and initialize audio events
-    UAudioEvent* AudioEvent1 = NewObject<UAudioEvent>(this);
-    AudioEvent1->Initialize(1);
-
-    UAudioEvent* AudioEvent2 = NewObject<UAudioEvent>(this);
-    AudioEvent2->Initialize(2);
-
-    UAudioEvent* AudioEvent3 = NewObject<UAudioEvent>(this);
-    AudioEvent3->Initialize(3);
+    UAudioEvent* AudioEvent1 = UAudioEvent::Create(1);
+    UAudioEvent* AudioEvent2 = UAudioEvent::Create(2);
+    UAudioEvent* AudioEvent3 = UAudioEvent::Create(3);
 
     // Add events to the queue, they will be processed later in the Tick method
     EventQueue.AddEvent(AudioEvent1);

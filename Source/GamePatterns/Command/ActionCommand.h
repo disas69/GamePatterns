@@ -13,8 +13,15 @@ class GAMEPATTERNS_API UActionCommand : public UCommand
 
 public:
     UActionCommand() : ExecuteFunc(nullptr), UndoFunc(nullptr) {}
+
+    static UActionCommand* Create(TFunction<void()> OnExecute, TFunction<void()> OnUndo)
+    {
+        UActionCommand* Command = NewObject<UActionCommand>();
+        Command->Initialize(OnExecute, OnUndo);
+        return Command;
+    }
     
-    virtual void Initialize(const TFunction<void()>& InExecute, const TFunction<void()>& InUndo);
+    virtual void Initialize(TFunction<void()> OnExecute, TFunction<void()> OnUndo);
     virtual void Execute() override;
     virtual void Undo() override;
 

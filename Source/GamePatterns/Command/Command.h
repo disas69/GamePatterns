@@ -12,6 +12,6 @@ class UCommand : public UObject
     GENERATED_BODY()
 
 public:
-    virtual void Execute();
-    virtual void Undo();
+    virtual void Execute() {}
+    virtual void Undo() {}
 };

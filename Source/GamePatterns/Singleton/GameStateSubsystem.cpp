@@ -32,9 +32,7 @@ ETestGameState UGameStateSubsystem::GetState() const
 void UGameStateSubsystem::InitializeStateMachine()
 {
     GameStateMachine.AddTransition(ETestGameState::None, ETestGameState::MainMenu, [this]() { UE_LOG(LogTemp, Warning, TEXT("Opening menu")); });
-
     GameStateMachine.AddTransition(ETestGameState::MainMenu, ETestGameState::InGame, [this]() { UE_LOG(LogTemp, Warning, TEXT("Starting game")); });
-
     GameStateMachine.AddTransition(ETestGameState::InGame, ETestGameState::GameOver, [this]() { UE_LOG(LogTemp, Warning, TEXT("Ending game")); });
 
     GameStateMachine.AddTransitions(ETestGameState::GameOver, {

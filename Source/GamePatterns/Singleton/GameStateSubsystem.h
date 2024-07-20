@@ -3,10 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../StateMachine/TestGameState.h"
 #include "../StateMachine/StateMachine.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameStateSubsystem.generated.h"
+
+UENUM(BlueprintType)
+enum class ETestGameState : uint8
+{
+    None,
+    MainMenu,
+    InGame,
+    GameOver
+};
 
 UCLASS()
 class GAMEPATTERNS_API UGameStateSubsystem : public UGameInstanceSubsystem

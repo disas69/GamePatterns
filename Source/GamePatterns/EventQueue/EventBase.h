@@ -12,5 +12,5 @@ class GAMEPATTERNS_API UEventBase : public UObject
     GENERATED_BODY()
 
 public:
-    virtual void Process();
+    virtual void Process() {}
 };
