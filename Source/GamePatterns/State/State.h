@@ -14,7 +14,7 @@ class GAMEPATTERNS_API UState : public UObject
 public:
     UState() = default;
 
-    virtual void OnEnter();
-    virtual void OnExit();
-    virtual void Update(float DeltaTime);
+    virtual void OnEnter() {}
+    virtual void OnExit() {}
+    virtual void Update(float DeltaTime) {}
 };

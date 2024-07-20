@@ -3,8 +3,7 @@
 #include "CharacterMoveState.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GamePatterns/GamePatternsTestCharacter.h"
-#include "GamePatterns/State/TestCharacterState.h"
+#include "GamePatterns/TestActors/TestCharacter.h"
 
 void UCharacterMoveState::OnEnter()
 {
@@ -29,7 +28,7 @@ void UCharacterMoveState::Update(float DeltaTime)
 
     if (bWasMoving && !bIsMoving && !bIsFalling)
     {
-        const AGamePatternsTestCharacter* TestCharacter = Cast<AGamePatternsTestCharacter>(OwnerCharacter);
+        const ATestCharacter* TestCharacter = Cast<ATestCharacter>(OwnerCharacter);
         if (TestCharacter != nullptr)
         {
             TestCharacter->SetState(ETestCharacterState::Idle);

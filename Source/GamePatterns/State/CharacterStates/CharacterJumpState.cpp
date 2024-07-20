@@ -3,7 +3,7 @@
 #include "CharacterJumpState.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GamePatterns/GamePatternsTestCharacter.h"
+#include "GamePatterns/TestActors/TestCharacter.h"
 
 void UCharacterJumpState::OnEnter()
 {
@@ -27,7 +27,7 @@ void UCharacterJumpState::Update(float DeltaTime)
 
     if (bWasFalling && !bIsFalling)
     {
-        const AGamePatternsTestCharacter* TestCharacter = Cast<AGamePatternsTestCharacter>(OwnerCharacter);
+        const ATestCharacter* TestCharacter = Cast<ATestCharacter>(OwnerCharacter);
         if (TestCharacter != nullptr)
         {
             TestCharacter->SetState(ETestCharacterState::Idle);

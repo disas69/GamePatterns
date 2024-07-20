@@ -15,7 +15,10 @@ class GAMEPATTERNS_API UCharacterState : public UState
 public:
     UCharacterState() = default;
     
-    virtual void Initialize(ACharacter* Owner);
+    virtual void Initialize(ACharacter* Owner)
+    {
+        OwnerCharacter = Owner;
+    }
 
     template <typename T>
     static T* Create(UObject* Outer, ACharacter* Owner)

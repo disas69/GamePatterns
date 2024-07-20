@@ -1,37 +1,36 @@
 ﻿// Game Programming Patterns, Eugene Esaulenko, 2024
 
-#include "GamePatternsTestCharacter.h"
-#include "State/CharacterStateComponent.h"
+#include "TestCharacter.h"
 
-AGamePatternsTestCharacter::AGamePatternsTestCharacter()
+ATestCharacter::ATestCharacter()
 {
     PrimaryActorTick.bCanEverTick = true;
     CharacterStateComponent = CreateDefaultSubobject<UCharacterStateComponent>(TEXT("CharacterStateComponent"));
 }
 
-void AGamePatternsTestCharacter::BeginPlay()
+void ATestCharacter::BeginPlay()
 {
     Super::BeginPlay();
 }
 
-void AGamePatternsTestCharacter::Tick(float DeltaTime)
+void ATestCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
 
-void AGamePatternsTestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-    PlayerInputComponent->BindAxis("MoveForward", this, &AGamePatternsTestCharacter::MoveForward);
-    PlayerInputComponent->BindAxis("MoveRight", this, &AGamePatternsTestCharacter::MoveRight);
-    PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AGamePatternsTestCharacter::Jump);
-    PlayerInputComponent->BindAction("Jump", IE_Released, this, &AGamePatternsTestCharacter::StopJumping);
-    PlayerInputComponent->BindAxis("Turn", this, &AGamePatternsTestCharacter::Turn);
-    PlayerInputComponent->BindAxis("LookUp", this, &AGamePatternsTestCharacter::LookUp);
+    PlayerInputComponent->BindAxis("MoveForward", this, &ATestCharacter::MoveForward);
+    PlayerInputComponent->BindAxis("MoveRight", this, &ATestCharacter::MoveRight);
+    PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ATestCharacter::Jump);
+    PlayerInputComponent->BindAction("Jump", IE_Released, this, &ATestCharacter::StopJumping);
+    PlayerInputComponent->BindAxis("Turn", this, &ATestCharacter::Turn);
+    PlayerInputComponent->BindAxis("LookUp", this, &ATestCharacter::LookUp);
 }
 
-void AGamePatternsTestCharacter::MoveForward(float X)
+void ATestCharacter::MoveForward(float X)
 {
     const float Value = X * MoveSpeed;
     const FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
@@ -40,7 +39,7 @@ void AGamePatternsTestCharacter::MoveForward(float X)
     CharacterStateComponent->HandleMovementInput(Value);
 }
 
-void AGamePatternsTestCharacter::MoveRight(float Y)
+void ATestCharacter::MoveRight(float Y)
 {
     const float Value = Y * MoveSpeed;
     const FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
@@ -49,26 +48,26 @@ void AGamePatternsTestCharacter::MoveRight(float Y)
     CharacterStateComponent->HandleMovementInput(Value);
 }
 
-void AGamePatternsTestCharacter::Turn(float X)
+void ATestCharacter::Turn(float X)
 {
     const float TurnAmount = X * RotationSpeed * GetWorld()->GetDeltaSeconds();
     AddControllerYawInput(TurnAmount);
 }
 
-void AGamePatternsTestCharacter::LookUp(float Y)
+void ATestCharacter::LookUp(float Y)
 {
     const float LookUpAmount = Y * RotationSpeed * GetWorld()->GetDeltaSeconds();
     AddControllerPitchInput(LookUpAmount);
 }
 
-void AGamePatternsTestCharacter::Jump()
+void ATestCharacter::Jump()
 {
     Super::Jump();
     
     CharacterStateComponent->SetState(ETestCharacterState::Jump);
 }
 
-void AGamePatternsTestCharacter::SetState(ETestCharacterState TargetState) const
+void ATestCharacter::SetState(ETestCharacterState TargetState) const
 {
     CharacterStateComponent->SetState(TargetState);
 }

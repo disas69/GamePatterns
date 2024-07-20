@@ -21,8 +21,10 @@ public:
     virtual void OnSpawnFromPool();
     virtual void OnReturnToPool();
 
+    UFUNCTION(BlueprintCallable, Category = "Object Pool")
     UActorPool* GetOwnerPool() const { return OwnerPool; }
     
+    UFUNCTION(BlueprintCallable, Category = "Object Pool")
     void Return();
 
 private:

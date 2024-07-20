@@ -1,21 +1,21 @@
 ﻿// Game Programming Patterns, Eugene Esaulenko, 2024
 
-#include "GamePatternsTestActor.h"
-#include "Command/ActionCommand.h"
-#include "EventQueue/AudioEvent.h"
-#include "ObjectPool/ActorPoolComponent.h"
-#include "ObjectPool/PooledActor.h"
-#include "ServiceLocator/AudioService.h"
-#include "ServiceLocator/ServiceLocatorSubsystem.h"
-#include "Singleton/GameStateSubsystem.h"
+#include "TestActor.h"
+#include "../Command/ActionCommand.h"
+#include "../EventQueue/AudioEvent.h"
+#include "../ObjectPool/ActorPoolComponent.h"
+#include "../ObjectPool/PooledActor.h"
+#include "../ServiceLocator/AudioService.h"
+#include "../ServiceLocator/ServiceLocatorSubsystem.h"
+#include "../Singleton/GameStateSubsystem.h"
 
-AGamePatternsTestActor::AGamePatternsTestActor()
+ATestActor::ATestActor()
 {
     PrimaryActorTick.bCanEverTick = true;
     ActorPoolComponent = CreateDefaultSubobject<UActorPoolComponent>(TEXT("ActorPoolComponent"));
 }
 
-void AGamePatternsTestActor::Tick(float DeltaTime)
+void ATestActor::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
@@ -23,7 +23,7 @@ void AGamePatternsTestActor::Tick(float DeltaTime)
     EventQueue.ProcessEvents();
 }
 
-void AGamePatternsTestActor::BeginPlay()
+void ATestActor::BeginPlay()
 {
     Super::BeginPlay();
 
@@ -38,7 +38,7 @@ void AGamePatternsTestActor::BeginPlay()
     // StartEventQueueTest();
 }
 
-void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void ATestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
 
@@ -55,19 +55,19 @@ void AGamePatternsTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
     ActorPoolComponent->DestroyPool();
 }
 
-void AGamePatternsTestActor::StartObjectPoolTest()
+void ATestActor::StartObjectPoolTest()
 {
     // Initialize actor pool
     ActorPoolComponent->CreatePool();
 
     // Start spawning actors
-    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AGamePatternsTestActor::SpawnPooledActor, SpawnInterval, true);
+    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &ATestActor::SpawnPooledActor, SpawnInterval, true);
 
     // Start returning actors
-    GetWorld()->GetTimerManager().SetTimer(ReturnTimerHandle, this, &AGamePatternsTestActor::ReturnActorToPool, ReturnInterval, true);
+    GetWorld()->GetTimerManager().SetTimer(ReturnTimerHandle, this, &ATestActor::ReturnActorToPool, ReturnInterval, true);
 }
 
-void AGamePatternsTestActor::SpawnPooledActor()
+void ATestActor::SpawnPooledActor()
 {
     APooledActor* Actor = ActorPoolComponent->GetActor();
     if (Actor == nullptr)
@@ -79,7 +79,7 @@ void AGamePatternsTestActor::SpawnPooledActor()
     ActiveActors.Add(Actor);
 }
 
-void AGamePatternsTestActor::ReturnActorToPool()
+void ATestActor::ReturnActorToPool()
 {
     if (ActiveActors.Num() == 0)
     {
@@ -90,7 +90,7 @@ void AGamePatternsTestActor::ReturnActorToPool()
     ActiveActors.RemoveAt(0);
 }
 
-void AGamePatternsTestActor::StartCommandStackTest()
+void ATestActor::StartCommandStackTest()
 {
     // Create and initialize action commands
     UActionCommand* MoveCommand = NewObject<UActionCommand>(this);
@@ -137,7 +137,7 @@ void AGamePatternsTestActor::StartCommandStackTest()
     }
 }
 
-void AGamePatternsTestActor::StartStateMachineTest()
+void ATestActor::StartStateMachineTest()
 {
     // UGameStateSubsystem is a singleton based on UGameInstanceSubsystem
     
@@ -157,7 +157,7 @@ void AGamePatternsTestActor::StartStateMachineTest()
     UGameStateSubsystem::GetInstance()->SetState(ETestGameState::InGame);
 }
 
-void AGamePatternsTestActor::StartServiceLocatorTest()
+void ATestActor::StartServiceLocatorTest()
 {
     // Try to resolve audio service instance that is not registered yet
     const UAudioService* AudioService = UServiceLocatorSubsystem::ResolveService<UAudioService>();
@@ -180,12 +180,12 @@ void AGamePatternsTestActor::StartServiceLocatorTest()
     UServiceLocatorSubsystem::UnregisterService<UAudioService>();
 }
 
-void AGamePatternsTestActor::StartEventQueueTest()
+void ATestActor::StartEventQueueTest()
 {
-    GetWorld()->GetTimerManager().SetTimer(EventQueueTimerHandle, this, &AGamePatternsTestActor::EnqueueEvent, EventQueueInterval, true);
+    GetWorld()->GetTimerManager().SetTimer(EventQueueTimerHandle, this, &ATestActor::EnqueueEvent, EventQueueInterval, true);
 }
 
-void AGamePatternsTestActor::EnqueueEvent()
+void ATestActor::EnqueueEvent()
 {
     // Create and initialize audio events
     UAudioEvent* AudioEvent1 = NewObject<UAudioEvent>(this);

@@ -3,12 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TestCharacterState.h"
 #include "StateController.h"
 #include "Components/ActorComponent.h"
 #include "CharacterStateComponent.generated.h"
 
 class UCharacterState;
+
+UENUM(BlueprintType)
+enum class ETestCharacterState : uint8
+{
+    Idle = 0,
+    Move = 1,
+    Jump = 2,
+};
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class GAMEPATTERNS_API UCharacterStateComponent : public UActorComponent

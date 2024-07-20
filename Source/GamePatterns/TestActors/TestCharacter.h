@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "State/TestCharacterState.h"
-#include "GamePatternsTestCharacter.generated.h"
+#include "../State/CharacterStateComponent.h"
+#include "TestCharacter.generated.h"
 
 class UCharacterStateComponent;
 
 UCLASS()
-class GAMEPATTERNS_API AGamePatternsTestCharacter : public ACharacter
+class GAMEPATTERNS_API ATestCharacter : public ACharacter
 {
     GENERATED_BODY()
 
 public:
-    AGamePatternsTestCharacter();
+    ATestCharacter();
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
     UCharacterStateComponent* CharacterStateComponent = nullptr;

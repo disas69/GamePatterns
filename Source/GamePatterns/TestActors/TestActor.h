@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Command/FCommandStack.h"
-#include "EventQueue/FEventQueue.h"
 #include "GameFramework/Actor.h"
-#include "ObjectPool/FActorPoolParams.h"
-#include "GamePatternsTestActor.generated.h"
+#include "../Command/FCommandStack.h"
+#include "../EventQueue/FEventQueue.h"
+#include "../ObjectPool/FActorPoolParams.h"
+#include "TestActor.generated.h"
 
 class UCharacterStateComponent;
 class UActorPoolComponent;
@@ -15,12 +15,12 @@ class UActorPool;
 class UActionCommand;
 
 UCLASS()
-class GAMEPATTERNS_API AGamePatternsTestActor : public AActor
+class GAMEPATTERNS_API ATestActor : public AActor
 {
     GENERATED_BODY()
 
 public:
-    AGamePatternsTestActor();
+    ATestActor();
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Object Pool")
     UActorPoolComponent* ActorPoolComponent = nullptr;
